@@ -1,11 +1,13 @@
-import React from 'react'
 
+import LoginPage from '@/components/auth/loginForm'
+import toast from 'react-hot-toast';
 export default function page() {
+
+
   return (
     <div>
+<LoginPage/>
 
-
-<h2>adfadf</h2>
     </div>
   )
 }
