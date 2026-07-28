@@ -6,21 +6,74 @@ import AuthLayout from "./AuthLayout";
 import Button from "@/components/shared/Button";
 // import "@/components/AuthLayout.css";
 import './auth.css'
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import BaseUrl from "@/config/api";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+
+
 
 export default function RegisterPage() {
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
+    reset
   } = useForm();
 
   const password = watch("password");
 
   const onSubmit = async (data) => {
     console.log("Register data:", data);
+    const { firstName, lastName, email, password } = data;
+
+    try {
+      const res = await axios.post(`${BaseUrl}/api/auth/signup`, {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+
+      console.log(res.data.access_token);
+
+      localStorage.setItem("token", res.data.access_token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      toast.success(res.data.message);
+
+      reset();
+      router.back();
+
+    } catch (e) {
+      const message =
+        e.response?.data?.message || "Something went wrong";
+
+      toast.error(message, {
+        style: {
+          borderRadius: "10px",
+          background: "#1A1A1A",
+          color: "#EDE7D6",
+        },
+      });
+
+    }
     // call your register API here
   };
+
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      router.replace('/')
+    }
+
+  }, [router])
 
   return (
     <AuthLayout title="Create account" subtitle="Join MyBlog and start reading">
@@ -99,7 +152,7 @@ export default function RegisterPage() {
             {...register("password", {
               required: "Password is required",
               minLength: {
-                value: 8,
+                value: 6,
                 message: "Password must be at least 8 characters",
               },
               pattern: {
@@ -121,9 +174,8 @@ export default function RegisterPage() {
             id="confirmPassword"
             type="password"
             placeholder="••••••••"
-            className={`form-input ${
-              errors.confirmPassword ? "input-error" : ""
-            }`}
+            className={`form-input ${errors.confirmPassword ? "input-error" : ""
+              }`}
             {...register("confirmPassword", {
               required: "Please confirm your password",
               validate: (value) =>

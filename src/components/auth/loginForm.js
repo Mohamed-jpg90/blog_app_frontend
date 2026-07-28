@@ -8,22 +8,38 @@ import Button from "@/components/shared/Button";
 // import "@/components/AuthLayout.css";
 import './auth.css'
 import toast from "react-hot-toast";
+import axios from "axios";
+import BaseUrl from "@/config/api";
+import { useRouter } from "next/navigation";
+
+
 
 export default function LoginPage() {
+
+
+const router = useRouter()
+  
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset
   } = useForm();
 
   const onSubmit = async (data) => {
     console.log("Login data:", data);
-    // call your login API here
-  };
 
+    try {
+      
+  const res = await axios.post(
+    `${BaseUrl}/api/auth/login`,
+    data
+  );
 
-    useEffect(()=>{
-    toast('login Page',
+  console.log(res.data);
+  localStorage.setItem("token",res.data.access_token)
+  localStorage.setItem("user" , JSON.stringify(res.data.user ) )
+    toast(res.data.message,
   {
     style: {
       borderRadius: '10px',
@@ -31,8 +47,37 @@ export default function LoginPage() {
       color: '#EDE7D6 ',
     },
   }
-);
-  },[])
+    )
+
+    reset()
+    router.back()
+    } catch ({error}) {
+      console.log("the error is :"+ error);
+      
+    }
+   
+  };
+
+
+useEffect(()=>{
+  const token = localStorage.getItem("token")
+   if (token) {
+      router.replace("/")
+    }
+
+},[router])
+
+//     useEffect(()=>{
+//     toast('login Page',
+//   {
+//     style: {
+//       borderRadius: '10px',
+//       background: '#1A1A1A',
+//       color: '#EDE7D6 ',
+//     },
+//   }
+// );
+//   },[])
 
   return (
     <AuthLayout title="Welcome back" subtitle="Log in to continue to MyBlog">
@@ -71,7 +116,7 @@ export default function LoginPage() {
             {...register("password", {
               required: "Password is required",
               minLength: {
-                value: 8,
+                value: 6,
                 message: "Password must be at least 8 characters",
               },
             })}

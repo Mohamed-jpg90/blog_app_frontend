@@ -23,3 +23,22 @@ export default function Button({
     </button>
   );
 }
+
+// "use client"
+// import Link from "next/link"
+
+// export default function Button({
+// text ,
+// to
+// }){
+//   return (
+//     <>
+//     <Link className="py-5 px-2.5  " href={to} >
+//     {text}
+    
+//     </Link>
+    
+    
+//     </>
+// //   )
+// }

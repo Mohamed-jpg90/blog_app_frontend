@@ -4,8 +4,13 @@ import Image from "next/image";
 import img2 from "../../image/profileImage.png";
 import Button from "../shared/Button";
 import "./profile.css";
+import BaseUrl from "@/config/api";
 
 export default function ProfilePage() {
+const token = localStorage.getItem("token")
+
+  const user = localStorage.getItem("user")
+
   return (
     <section className="profileHero">
       <div className="profileAvatar">

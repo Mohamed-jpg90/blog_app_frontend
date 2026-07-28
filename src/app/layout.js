@@ -29,10 +29,10 @@ export default function RootLayout({ children }) {
 
         <Providers>
           <StoreProvider>
-            <PageLoader>
+            {/* <PageLoader> */}
               {children}
 
-            </PageLoader>
+            {/* </PageLoader> */}
 
           </StoreProvider>
         </Providers>

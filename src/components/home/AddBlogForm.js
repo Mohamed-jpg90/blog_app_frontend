@@ -6,6 +6,10 @@ import { useForm } from "react-hook-form";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import Button from "@/components/shared/Button";
 import "./home.css";
+import axios from "axios";
+import BaseUrl from "@/config/api";
+
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNGUxNDA4MWU4NmM0ZDMwZTU0YjgxOCIsImlhdCI6MTc4NDYzNjc3NX0.JHqT-deubJyGsBxkwuppCQPDzw4ltko9yuuGllZYT7s"
 
 const MAX_FILE_SIZE_MB = 5;
 
@@ -22,6 +26,8 @@ export default function AddBlogForm() {
     reset,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm();
+
+
 
   const handleFile = (file) => {
     if (!file) return;
@@ -55,26 +61,48 @@ export default function AddBlogForm() {
   };
 
   const onSubmit = async (data) => {
-    if (!imageFile) {
-      setImageError("A cover image is required");
-      return;
+
+    try {
+
+
+      if (!imageFile) {
+        setImageError("A cover image is required");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("content", data.content);
+      formData.append("image", imageFile);
+
+      console.log("Blog submission:", {
+        title: data.title,
+        content: data.content,
+        image: imageFile,
+      });
+
+
+      const res = await axios.post(
+        `${BaseUrl}/api/blog`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      reset();
+      removeImage()
+
+    } catch (error) {
+      console.log("the message is " + error);
+
     }
 
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("content", data.content);
-    formData.append("image", imageFile);
 
-    console.log("Blog submission:", {
-      title: data.title,
-      content: data.content,
-      image: imageFile,
-    });
-
-    // await fetch("/api/blogs", { method: "POST", body: formData });
-
-    reset();
-    removeImage();
+    ;
   };
 
   return (
@@ -114,9 +142,8 @@ export default function AddBlogForm() {
               id="content"
               rows={8}
               placeholder="Write your blog content here..."
-              className={`form-input form-textarea ${
-                errors.content ? "input-error" : ""
-              }`}
+              className={`form-input form-textarea ${errors.content ? "input-error" : ""
+                }`}
               {...register("content", {
                 required: "Content is required",
                 minLength: {
@@ -135,9 +162,8 @@ export default function AddBlogForm() {
 
             {!preview ? (
               <div
-                className={`upload-dropzone ${
-                  isDragging ? "upload-dropzone-active" : ""
-                }`}
+                className={`upload-dropzone ${isDragging ? "upload-dropzone-active" : ""
+                  }`}
                 onClick={() => fileInputRef.current?.click()}
                 onDragOver={(e) => {
                   e.preventDefault();

@@ -8,6 +8,7 @@ import Button from "../shared/Button";
 // import "./Navbar.css";
 import './layout.css'
 import img from '../../image/logo.jpg'
+import { useRouter } from "next/navigation";
 const navLinks = [
   { label: "Work", href: "#work" },
   { label: "Services", href: "#services" },
@@ -17,6 +18,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [hovered, setHovered] = useState(null);
+  const router  = useRouter()
 
   return (
     <header className="header">
@@ -50,7 +52,11 @@ export default function Navbar() {
         </ul>
 
         {/* CTA */}
+        <div className="flex flex-row gap-4" >
+            <Button variant="primary" onClick={()=>{router.push('/login')}} >login</Button>
         <Button variant="primary">Book a call</Button>
+        </div>
+      
       </nav>
     </header>
   );
