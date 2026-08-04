@@ -6,6 +6,7 @@ import PostCard from "../PostCard";
 // import { tabContent } from "@/component/lib/motion-varia
 import { tabContent } from "@/components/lib/motion-variants";
 import { EmptyState } from "./PostsTab";
+import EditProfilePage from "../EditProfile";
 
 export default function LikedTab({ posts }) {
   if (!posts?.length) {

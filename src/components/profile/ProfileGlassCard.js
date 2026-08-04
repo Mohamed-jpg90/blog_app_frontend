@@ -75,8 +75,16 @@ import { motion } from "framer-motion";
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileStatCard from "./ProfileStatCard";
 import { riseIn } from "../lib/motion-variants";
+import BaseUrl from "@/config/api";
+import { useEffect } from "react";
 
 export default function ProfileGlassCard({ user = {} }) {
+
+ useEffect(() => {
+  console.log("User:", user);
+  console.log("Image:", user.image);
+  console.log("Image URL:", `${user.image}`);
+}, [user]);
   return (
     <motion.div
       variants={riseIn}
@@ -87,12 +95,14 @@ export default function ProfileGlassCard({ user = {} }) {
     >
       {/* Avatar + Name */}
       <div className="flex flex-col items-center text-center">
-        <ProfileAvatar
-          src={user.image || null }
-        />
+    <ProfileAvatar
+  src={user.image ? `${user.image}` : undefined}
+  alt={user.firstName}
+  verified={user.verified}
+/>
 
         <h1 className="mt-5 text-3xl font-bold text-[#ede7d6]">
-          {user.firstName +"  "+ user.lastName || "unkonwn User"}
+          {user.firstName + "  " + user.lastName || "unkonwn User"}
         </h1>
 
         {user.email && (
@@ -103,7 +113,7 @@ export default function ProfileGlassCard({ user = {} }) {
       </div>
 
       {/* Stats */}
-      <div className="mt-10 flex justify-center">
+      {/* <div className="mt-10 flex justify-center">
         <div className="grid w-full max-w-xl grid-cols-3 gap-4">
           <ProfileStatCard
             label="Followers"
@@ -124,7 +134,7 @@ export default function ProfileGlassCard({ user = {} }) {
           />
 
         </div>
-      </div>
+      </div> */}
     </motion.div>
   );
 }

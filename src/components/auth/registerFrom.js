@@ -44,22 +44,32 @@ export default function RegisterPage() {
       localStorage.setItem("token", res.data.access_token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      toast.success(res.data.message);
+      // toast.success(res.data.message);
 
       reset();
       router.back();
+         toast.success(res.data.message,
+        {
+          style: {
+            borderRadius: '10px',
+            background: '#1A1A1A',
+            color: '#EDE7D6 ',
+          },
+        }
+      )
 
-    } catch (e) {
-      const message =
-        e.response?.data?.message || "Something went wrong";
-
-      toast.error(message, {
-        style: {
-          borderRadius: "10px",
-          background: "#1A1A1A",
-          color: "#EDE7D6",
-        },
-      });
+    } catch (error) {
+  
+        toast.error(
+        error.response?.data?.message || "Something went wrong",
+        {
+          style: {
+            borderRadius: "10px",
+            background: "#1A1A1A",
+            color: "#EDE7D6",
+          },
+        }
+      );
 
     }
     // call your register API here

@@ -68,7 +68,7 @@ export default function HeroSection() {
         </motion.p>
 
         <div className="mt-10">
-          <ExploreButton delay={2.0} href="#work" />
+          <ExploreButton delay={2.0} href="/blogs" />
         </div>
       </div>
     </section>

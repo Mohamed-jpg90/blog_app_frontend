@@ -3,10 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import BlogCard from "../../components/shared/BlogCard";
 import Button from "../shared/Button";
 import BaseUrl from "@/config/api";
 import "./home.css";
+import PostCard from "../profile/PostCard";
+import GridSkeleton from "../shared/GridSkeleton";
 
 export default function AllBlogs() {
   const router = useRouter();
@@ -23,12 +24,11 @@ export default function AllBlogs() {
     }
 
     try {
-      const res = await axios.get(`${BaseUrl}/api/blog/`, {
+      const res = await axios.get(`${BaseUrl}/api/blog/allblogs`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("DATA:", res.data);
       setBlogs(res.data);
     } catch (error) {
       console.log("ERROR STATUS:", error?.response?.status);
@@ -48,7 +48,9 @@ export default function AllBlogs() {
         <div>
           <h2 className="allBlogs-title">All posts</h2>
           <p className="allBlogs-subtitle">
-            {blogs.length} {blogs.length === 1 ? "story" : "stories"} published
+            {loading
+              ? "Loading stories…"
+              : `${blogs.length} ${blogs.length === 1 ? "story" : "stories"} published`}
           </p>
         </div>
 
@@ -61,14 +63,15 @@ export default function AllBlogs() {
 
       <div className="allBlogs-grid">
         {loading ? (
-          <p>Loading...</p>
+          <GridSkeleton count={6} />
         ) : blogs.length === 0 ? (
           <p>No blogs found.</p>
         ) : (
-          blogs.map((blog) => <BlogCard key={blog._id} blog={blog} />)
+          blogs.map((blog, i) => (
+            <PostCard key={blog._id} post={blog} delay={i * 0.05} />
+          ))
         )}
       </div>
     </section>
   );
 }
-

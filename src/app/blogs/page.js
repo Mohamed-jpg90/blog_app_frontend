@@ -1,8 +1,8 @@
 import React from 'react'
 import Navbar from '@/components/layout/NavBar'
 import AllBlogs from '@/components/home/AllBlogs'
-import Footer from '@/components/layout/Footer'
-import BlogImage from '../../image/profilebackground.jpg'
+
+import Footer from '@/components/footer/Footer'
 export default function page() {
 
 //     const blogs = [

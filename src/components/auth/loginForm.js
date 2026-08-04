@@ -17,8 +17,8 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
 
 
-const router = useRouter()
-  
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -30,54 +30,64 @@ const router = useRouter()
     console.log("Login data:", data);
 
     try {
-      
-  const res = await axios.post(
-    `${BaseUrl}/api/auth/login`,
-    data
-  );
 
-  console.log(res.data);
-  localStorage.setItem("token",res.data.access_token)
-  localStorage.setItem("user" , JSON.stringify(res.data.user ) )
-    toast(res.data.message,
-  {
-    style: {
-      borderRadius: '10px',
-      background: '#1A1A1A',
-      color: '#EDE7D6 ',
-    },
-  }
-    )
+      const res = await axios.post(
+        `${BaseUrl}/api/auth/login`,
+        data
+      );
 
-    reset()
-    router.back()
-    } catch ({error}) {
-      console.log("the error is :"+ error);
-      
+      console.log(res.data);
+      localStorage.setItem("token", res.data.access_token)
+      localStorage.setItem("user", JSON.stringify(res.data.user))
+      toast.success(res.data.message,
+        {
+          style: {
+            borderRadius: '10px',
+            background: '#1A1A1A',
+            color: '#EDE7D6 ',
+          },
+        }
+      )
+
+      reset()
+      router.back()
+    } catch (error) {
+      console.log(error);
+
+      toast.error(
+        error.response?.data?.message || "Something went wrong",
+        {
+          style: {
+            borderRadius: "10px",
+            background: "#1A1A1A",
+            color: "#EDE7D6",
+          },
+        }
+      );
     }
-   
+
   };
 
 
-useEffect(()=>{
-  const token = localStorage.getItem("token")
-   if (token) {
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (token) {
       router.replace("/")
     }
 
-},[router])
+  }, [router])
 
-//     useEffect(()=>{
-//     toast('login Page',
-//   {
-//     style: {
-//       borderRadius: '10px',
-//       background: '#1A1A1A',
-//       color: '#EDE7D6 ',
-//     },
-//   }
-// );
-//   },[])
+  //     useEffect(()=>{
+  //     toast('login Page',
+  //   {
+  //     style: {
+  //       borderRadius: '10px',
+  //       background: '#1A1A1A',
+  //       color: '#EDE7D6 ',
+  //     },
+  //   }
+  // );
+  //   },[])
 
   return (
     <AuthLayout title="Welcome back" subtitle="Log in to continue to MyBlog">

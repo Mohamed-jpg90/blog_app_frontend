@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-const TABS = ["Posts", "Liked", "Bookmarks", "About"];
+const TABS = ["Posts", "Edit", "change"];
 
 export default function StickyTabs({ activeTab, onChange }) {
   return (

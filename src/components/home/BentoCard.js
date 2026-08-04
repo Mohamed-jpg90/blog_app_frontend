@@ -36,7 +36,7 @@ export default function BentoCard({ blog, area, size = "compact", className = ""
       viewport={{ once: true, amount: 0.3 }}
       className={`group relative h-full min-h-[220px] ${className}`}
     >
-      <Link href={`/blog/${blog._id}`} className="block h-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8b5cf6]">
+      <Link href={`/blogDetails/${blog._id}`} className="block h-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8b5cf6]">
         <MagicCard
           gradientColor="#150f26"
           gradientFrom="#8b5cf6"
@@ -46,7 +46,7 @@ export default function BentoCard({ blog, area, size = "compact", className = ""
           <div className="relative flex h-full flex-col overflow-hidden rounded-2xl">
             <div className={`relative w-full overflow-hidden ${isFeatured ? "h-3/5" : "h-2/3"}`}>
               <Image
-                src={`${BaseUrl}${blog.image}`}
+                src={`${blog.image}`}
                 alt={blog.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"

@@ -104,7 +104,7 @@ export default function BlogDetails({ blog }) {
           aria-label="Open image full screen"
         >
           <Image
-            src={`${BaseUrl}${gallery[0]}`}
+            src={`${gallery[0]}`}
             alt={title}
             fill
             sizes="100vw"
@@ -137,7 +137,7 @@ export default function BlogDetails({ blog }) {
             {owner?.image ? (
               <div className="relative h-11 w-11 overflow-hidden rounded-full ring-1 ring-white/10">
                 <Image
-                  src={`${BaseUrl}${owner.image}`}
+                  src={`${owner.image}`}
                   alt={authorName}
                   fill
                   sizes="44px"
@@ -155,20 +155,23 @@ export default function BlogDetails({ blog }) {
             </div>
           </div>
 
-          <button
+          {/* <button
             type="button"
             className="rounded-full border border-[#d4af6a]/40 px-4 py-1.5 text-xs font-semibold text-[#d4af6a] transition-colors hover:bg-[#d4af6a] hover:text-[#0a0a0a]"
           >
             Follow
-          </button>
+          </button> */}
         </div>
 
         {/* CONTENT */}
-        <div className="mt-10 space-y-5 text-[16px] leading-[1.85] text-[#ede7d6]/85">
-          {(content || "").split("\n\n").map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
-        </div>
+      <div className="mt-10 space-y-3 text-[16px] leading-[1.85] text-[#ede7d6]/85">
+  {(content || "")
+    .split("\n")
+    .filter((line) => line.trim() !== "")
+    .map((line, i) => (
+      <p key={i}>{line}</p>
+    ))}
+</div>
 
         {/* GALLERY STRIP — only renders if there's more than one image */}
         {gallery.length > 1 && (
@@ -184,7 +187,7 @@ export default function BlogDetails({ blog }) {
                   className="relative h-24 w-32 flex-shrink-0 overflow-hidden rounded-lg ring-1 ring-white/10 transition-opacity hover:opacity-80"
                 >
                   <Image
-                    src={`${BaseUrl}${img}`}
+                    src={`${img}`}
                     alt={`${title} ${i + 1}`}
                     fill
                     sizes="128px"
@@ -258,7 +261,7 @@ export default function BlogDetails({ blog }) {
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={`${BaseUrl}${gallery[activeIndex]}`}
+              src={`${gallery[activeIndex]}`}
               alt={`${title} full view`}
               fill
               sizes="90vw"
@@ -276,9 +279,8 @@ export default function BlogDetails({ blog }) {
                     setActiveIndex(i);
                   }}
                   aria-label={`Go to image ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all ${
-                    i === activeIndex ? "w-6 bg-[#d4af6a]" : "w-1.5 bg-white/30"
-                  }`}
+                  className={`h-1.5 rounded-full transition-all ${i === activeIndex ? "w-6 bg-[#d4af6a]" : "w-1.5 bg-white/30"
+                    }`}
                 />
               ))}
             </div>

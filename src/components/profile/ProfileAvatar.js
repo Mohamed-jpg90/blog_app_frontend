@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
 import img from '../../image/user.jpg'
-import BaseUrl from "@/config/api";
+// import BaseUrl from "@/config/api";
 export default function ProfileAvatar({ 
     src  }) {
   return (

@@ -4,12 +4,11 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { FiUploadCloud, FiX } from "react-icons/fi";
+import toast from "react-hot-toast";
 import Button from "@/components/shared/Button";
 import "./home.css";
 import axios from "axios";
 import BaseUrl from "@/config/api";
-
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNGUxNDA4MWU4NmM0ZDMwZTU0YjgxOCIsImlhdCI6MTc4NDYzNjc3NX0.JHqT-deubJyGsBxkwuppCQPDzw4ltko9yuuGllZYT7s"
 
 const MAX_FILE_SIZE_MB = 5;
 
@@ -24,10 +23,8 @@ export default function AddBlogForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors, isSubmitting },
   } = useForm();
-
-
 
   const handleFile = (file) => {
     if (!file) return;
@@ -61,12 +58,16 @@ export default function AddBlogForm() {
   };
 
   const onSubmit = async (data) => {
-
     try {
-
-
       if (!imageFile) {
         setImageError("A cover image is required");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        toast.error("You must be logged in to publish a post.", toastStyle.error);
         return;
       }
 
@@ -75,34 +76,21 @@ export default function AddBlogForm() {
       formData.append("content", data.content);
       formData.append("image", imageFile);
 
-      console.log("Blog submission:", {
-        title: data.title,
-        content: data.content,
-        image: imageFile,
+      await axios.post(`${BaseUrl}/api/blog`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-
-      const res = await axios.post(
-        `${BaseUrl}/api/blog`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
+      toast.success("Your post has been published.", toastStyle.success);
       reset();
-      removeImage()
-
+      removeImage();
     } catch (error) {
-      console.log("the message is " + error);
-
+      const message =
+        error.response?.data?.message || "Something went wrong. Please try again.";
+      toast.error(message, toastStyle.error);
     }
-
-
-    ;
   };
 
   return (
@@ -142,8 +130,9 @@ export default function AddBlogForm() {
               id="content"
               rows={8}
               placeholder="Write your blog content here..."
-              className={`form-input form-textarea ${errors.content ? "input-error" : ""
-                }`}
+              className={`form-input form-textarea ${
+                errors.content ? "input-error" : ""
+              }`}
               {...register("content", {
                 required: "Content is required",
                 minLength: {
@@ -162,8 +151,9 @@ export default function AddBlogForm() {
 
             {!preview ? (
               <div
-                className={`upload-dropzone ${isDragging ? "upload-dropzone-active" : ""
-                  }`}
+                className={`upload-dropzone ${
+                  isDragging ? "upload-dropzone-active" : ""
+                }`}
                 onClick={() => fileInputRef.current?.click()}
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -177,7 +167,9 @@ export default function AddBlogForm() {
                   <span className="upload-text-strong">Click to upload</span>{" "}
                   or drag and drop
                 </p>
-                <p className="upload-hint">PNG, JPG up to {MAX_FILE_SIZE_MB}MB</p>
+                <p className="upload-hint">
+                  PNG, JPG up to {MAX_FILE_SIZE_MB}MB
+                </p>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -217,12 +209,34 @@ export default function AddBlogForm() {
           >
             {isSubmitting ? "Publishing..." : "Publish post"}
           </Button>
-
-          {isSubmitSuccessful && (
-            <p className="form-success">Your post has been published.</p>
-          )}
         </form>
       </div>
     </div>
   );
 }
+
+// toast styling to match the dark / violet / gold / cream design system
+const toastStyle = {
+  success: {
+    style: {
+      background: "#0A0A0A",
+      color: "#EDE7D6",
+      border: "1px solid #7C3AED",
+    },
+    iconTheme: {
+      primary: "#7C3AED",
+      secondary: "#EDE7D6",
+    },
+  },
+  error: {
+    style: {
+      background: "#0A0A0A",
+      color: "#EDE7D6",
+      border: "1px solid #B91C1C",
+    },
+    iconTheme: {
+      primary: "#EF4444",
+      secondary: "#EDE7D6",
+    },
+  },
+};

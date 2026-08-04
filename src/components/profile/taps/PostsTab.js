@@ -1,32 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
-// import PostCard from "../PostCard";
-import PostCard from "../PostCard";
-// import { tabContent } from "@/lib/motion-variants";
+import { motion, AnimatePresence } from "framer-motion";
 import { tabContent } from "@/components/lib/motion-variants";
+import PostCardManage from "../../blog/Postcardmanage";
+import GridSkeleton from "@/components/shared/GridSkeleton";
 
-export default function PostsTab({ posts }) {
-  if (!posts?.length) {
-    return (
-      <motion.div variants={tabContent} initial="hidden" animate="show" exit="exit">
-        <EmptyState message="No articles published yet." />
-      </motion.div>
-    );
-  }
+export default function PostsTab({ posts, onUpdated, onDeleted }) {
+  const isLoading = posts === null || posts === undefined;
 
   return (
-    <motion.div
-      variants={tabContent}
-      initial="hidden"
-      animate="show"
-      exit="exit"
-      className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-    >
-      {posts.map((post, i) => (
-        <PostCard key={post.id} post={post} delay={i * 0.05} />
-      ))}
-    </motion.div>
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <motion.div
+          key="skeleton"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          <GridSkeleton count={6} />
+        </motion.div>
+      ) : !posts.length ? (
+        <motion.div
+          key="empty"
+          variants={tabContent}
+          initial="hidden"
+          animate="show"
+          exit="exit"
+        >
+          <EmptyState message="No articles published yet." />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="posts"
+          variants={tabContent}
+          initial="hidden"
+          animate="show"
+          exit="exit"
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {posts.map((post, i) => (
+            <PostCardManage
+              key={post._id}
+              post={post}
+              delay={i * 0.05}
+              onUpdated={onUpdated}
+              onDeleted={onDeleted}
+            />
+          ))}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

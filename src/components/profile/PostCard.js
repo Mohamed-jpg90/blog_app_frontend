@@ -6,8 +6,15 @@ import { FiArrowUpRight } from "react-icons/fi";
 // import { MagicCard } from "@/components/magicui/magic-card";
 import { MagicCard } from "../ui/magic-card";
 import BaseUrl from "@/config/api";
+import Link from "next/link";
 
 export default function PostCard({ post, delay = 0 }) {
+  function formatDate(date) {
+  const d = new Date(Number(date));
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -22,10 +29,10 @@ export default function PostCard({ post, delay = 0 }) {
         gradientOpacity={0.4}
         className="overflow-hidden rounded-2xl border border-[#a78bfa]/12 bg-[#0a0a0a]/60 backdrop-blur-xl"
       >
-        <a href={post.href} className="block">
+        <Link href={`/blogDetails/${post._id}`} className="block">
           <div className="relative h-44 w-full overflow-hidden">
             <Image
-              src={`${BaseUrl}${post.image}`}
+              src={`${post.image}`}
               alt={post.title}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
@@ -36,8 +43,9 @@ export default function PostCard({ post, delay = 0 }) {
 
           <div className="p-5">
             <div className="flex items-start justify-between gap-3">
-              <h3 className="text-base font-semibold text-[#ede7d6]">
-                {post.title}
+              <h3 className="line-clamp-2 h-14 leading-7 text-base font-semibold text-[#ede7d6]">
+                {post.title?.split(/\s+/).slice(0, 10).join(" ")}
+                {post.title?.split(/\s+/).length > 10 ? "..." : ""}
               </h3>
               <FiArrowUpRight
                 size={16}
@@ -48,12 +56,12 @@ export default function PostCard({ post, delay = 0 }) {
               {post.excerpt}
             </p>
             <div className="mt-4 flex items-center gap-3 text-xs text-[#ede7d6]/35">
-              <span>{post.date}</span>
+              <span>{formatDate(post.date)}</span>
               <span>·</span>
               <span>{post.readTime}</span>
             </div>
           </div>
-        </a>
+        </Link>
       </MagicCard>
     </motion.div>
   );

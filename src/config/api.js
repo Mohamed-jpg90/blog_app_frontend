@@ -17,6 +17,6 @@
 // }
 import React from 'react'
 
-const BaseUrl = 'http://localhost:8080'
+const BaseUrl = 'https://blog-app-back-zeta.vercel.app'
 
 export default BaseUrl
