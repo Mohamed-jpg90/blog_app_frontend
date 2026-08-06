@@ -16,14 +16,9 @@ export default function AllBlogsHome() {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+  
       try {
-        const res = await axios.get(`${BaseUrl}/api/blog/allblogs`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(`${BaseUrl}/api/blog/allblogs`);
         setBlogs(Array.isArray(res.data) ? res.data.slice(0, 5) : []);
       } catch (error) {
         console.log("ERROR:", error?.response?.data);

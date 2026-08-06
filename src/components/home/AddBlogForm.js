@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { FiUploadCloud, FiX } from "react-icons/fi";
@@ -9,6 +9,7 @@ import Button from "@/components/shared/Button";
 import "./home.css";
 import axios from "axios";
 import BaseUrl from "@/config/api";
+import { useRouter } from "next/navigation";
 
 const MAX_FILE_SIZE_MB = 5;
 
@@ -18,6 +19,7 @@ export default function AddBlogForm() {
   const [imageError, setImageError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+  const router = useRouter()
 
   const {
     register,
@@ -63,8 +65,8 @@ export default function AddBlogForm() {
         setImageError("A cover image is required");
         return;
       }
-
       const token = localStorage.getItem("token");
+
 
       if (!token) {
         toast.error("You must be logged in to publish a post.", toastStyle.error);
@@ -92,6 +94,15 @@ export default function AddBlogForm() {
       toast.error(message, toastStyle.error);
     }
   };
+
+useEffect(()=>{
+      const token = localStorage.getItem("token");
+
+if(!token){
+  router.replace('/login')
+}
+
+},[])
 
   return (
     <div className="addBlog-wrapper">

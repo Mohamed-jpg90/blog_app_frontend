@@ -17,18 +17,10 @@ export default function AllBlogs() {
   const fetchData = async () => {
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      console.log("No token found in localStorage — user may not be logged in.");
-      setLoading(false);
-      return;
-    }
+  
 
     try {
-      const res = await axios.get(`${BaseUrl}/api/blog/allblogs`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(`${BaseUrl}/api/blog/allblogs`);
       setBlogs(res.data);
     } catch (error) {
       console.log("ERROR STATUS:", error?.response?.status);

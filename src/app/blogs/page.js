@@ -3,6 +3,17 @@ import Navbar from '@/components/layout/NavBar'
 import AllBlogs from '@/components/home/AllBlogs'
 
 import Footer from '@/components/footer/Footer'
+
+
+export const metadata = {
+  title: "All Posts", // becomes "All Posts | Blog Space" via the template
+  description:
+    "Browse every article published on Blog Space — web development, technology, and personal stories from our writers.",
+  alternates: {
+    canonical: "/blog",
+  },
+};
+
 export default function page() {
 
 //     const blogs = [
